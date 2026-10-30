@@ -1,0 +1,33 @@
+{
+  "name": "new",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axlvan8/new.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axlvan8/new/issues"
+  },
+  "homepage": "https://github.com/axlvan8/new#readme",
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "argon2": "^0.45.1",
+    "busboy": "^1.6.0",
+    "dotenv": "^18.0.9",
+    "hono": "^4.13.13",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

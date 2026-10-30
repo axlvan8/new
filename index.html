@@ -1,0 +1,345 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>MyFirebase</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, sans-serif;
+      background: #0b1120;
+      color: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px 7%;
+      border-bottom: 1px solid #293449;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 1.35rem;
+      font-weight: 750;
+      color: #93c5fd;
+    }
+
+    main {
+      width: min(900px, 92%);
+      margin: 48px auto;
+    }
+
+    .panel {
+      background: #131d30;
+      border: 1px solid #293449;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .auth-panel {
+      max-width: 440px;
+      margin: 30px auto;
+    }
+
+    h1, h2 { margin-top: 0; }
+    p { color: #aab7ca; line-height: 1.6; }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-size: .92rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #40506a;
+      background: #0b1120;
+      color: white;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      font: inherit;
+      font-weight: 650;
+    }
+
+    .primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .secondary {
+      background: #25344b;
+      color: #e5e7eb;
+    }
+
+    .danger {
+      background: #7f1d1d;
+      color: white;
+    }
+
+    form button { width: 100%; margin-top: 22px; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .hidden { display: none !important; }
+
+    .muted { color: #93a4bb; font-size: .9rem; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #8290a6;
+      font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">MyFirebase</div>
+    <div id="header-user" class="muted">Personal backend platform</div>
+  </header>
+
+  <main>
+    <section id="welcome" class="panel">
+      <h1>Your own backend platform</h1>
+      <p>
+        MyFirebase is a self-hosted project for accounts, data, and
+        eventually storage, realtime updates, and messaging.
+      </p>
+      <div class="actions">
+        <button class="primary" id="show-login">Log in</button>
+        <button class="secondary" id="show-register">Create account</button>
+      </div>
+    </section>
+
+    <section id="login-panel" class="panel auth-panel hidden">
+      <h2>Log in</h2>
+      <p>Sign in to your MyFirebase account.</p>
+      <form id="login-form">
+        <label for="login-username">Username</label>
+        <input id="login-username" name="username"
+               autocomplete="username" required minlength="3" maxlength="24">
+
+        <label for="login-password">Password</label>
+        <input id="login-password" name="password" type="password"
+               autocomplete="current-password" required>
+
+        <button class="primary" type="submit">Log in</button>
+      </form>
+      <p class="muted">Need an account? <a href="#" id="login-to-register">Register</a></p>
+      <div id="login-status" class="status" role="status"></div>
+    </section>
+
+    <section id="register-panel" class="panel auth-panel hidden">
+      <h2>Create an account</h2>
+      <p>Usernames must be 3–24 letters, numbers, or underscores.
+         Use a unique password of at least 12 characters.</p>
+      <form id="register-form">
+        <label for="register-username">Username</label>
+        <input id="register-username" name="username"
+               autocomplete="username" required minlength="3" maxlength="24"
+               pattern="[A-Za-z0-9_]{3,24}">
+
+        <label for="register-password">Password</label>
+        <input id="register-password" name="password" type="password"
+               autocomplete="new-password" required minlength="12" maxlength="128">
+
+        <button class="primary" type="submit">Create account</button>
+      </form>
+      <p class="muted">Already registered? <a href="#" id="register-to-login">Log in</a></p>
+      <div id="register-status" class="status" role="status"></div>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="panel">
+        <h1>Account dashboard</h1>
+        <p>You are logged in to MyFirebase.</p>
+        <p>Username: <strong id="account-username"></strong></p>
+        <p>User ID: <strong id="account-id"></strong></p>
+        <div class="actions">
+          <button class="secondary" id="refresh-account">Refresh account</button>
+          <button class="danger" id="logout-button">Log out</button>
+        </div>
+        <div id="account-status" class="status" role="status"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Platform services</h2>
+        <p>Authentication <strong>Available</strong></p>
+        <p>Database API <span class="muted">Implemented for testing</span></p>
+        <p>File storage <span class="muted">Not implemented yet</span></p>
+        <p>Realtime updates <span class="muted">Not implemented yet</span></p>
+        <p>Internal messaging <span class="muted">Not implemented yet</span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>MyFirebase · Self-hosted backend project</footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const sections = [
+      'welcome', 'login-panel', 'register-panel', 'dashboard'
+    ];
+
+    function showSection(id) {
+      for (const section of sections) {
+        $(section).classList.toggle('hidden', section !== id);
+      }
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch('/api' + path, {
+        ...options,
+        credentials: 'same-origin',
+        headers: {
+          ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+          ...options.headers
+        }
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed (${response.status})`);
+      }
+
+      return data;
+    }
+
+    function showStatus(id, message) {
+      $(id).textContent = message;
+    }
+
+    function showDashboard(user) {
+      $('account-username').textContent = user.username;
+      $('account-id').textContent = user.id;
+      $('header-user').textContent = user.username;
+      $('account-status').textContent = '';
+      showSection('dashboard');
+    }
+
+    $('show-login').addEventListener('click', () => showSection('login-panel'));
+    $('show-register').addEventListener('click', () => showSection('register-panel'));
+
+    $('login-to-register').addEventListener('click', (event) => {
+      event.preventDefault();
+      showSection('register-panel');
+    });
+
+    $('register-to-login').addEventListener('click', (event) => {
+      event.preventDefault();
+      showSection('login-panel');
+    });
+
+    $('register-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      showStatus('register-status', 'Creating account...');
+
+      const form = new FormData(event.currentTarget);
+
+      try {
+        await api('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: form.get('username'),
+            password: form.get('password')
+          })
+        });
+
+        $('register-form').reset();
+        showSection('login-panel');
+        showStatus('login-status', 'Account created. You can now log in.');
+      } catch (error) {
+        showStatus('register-status', error.message);
+      }
+    });
+
+    $('login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      showStatus('login-status', 'Signing in...');
+
+      const form = new FormData(event.currentTarget);
+
+      try {
+        const result = await api('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: form.get('username'),
+            password: form.get('password')
+          })
+        });
+
+        $('login-form').reset();
+        showDashboard(result.user);
+      } catch (error) {
+        showStatus('login-status', error.message);
+      }
+    });
+
+    $('refresh-account').addEventListener('click', async () => {
+      try {
+        const result = await api('/auth/me');
+        showDashboard(result.user);
+        showStatus('account-status', 'Account refreshed.');
+      } catch (error) {
+        showStatus('account-status', error.message);
+        showSection('login-panel');
+      }
+    });
+
+    $('logout-button').addEventListener('click', async () => {
+      try {
+        await api('/auth/logout', { method: 'POST' });
+        $('header-user').textContent = 'Personal backend platform';
+        showSection('welcome');
+      } catch (error) {
+        showStatus('account-status', error.message);
+      }
+    });
+
+    async function checkExistingSession() {
+      try {
+        const result = await api('/auth/me');
+        showDashboard(result.user);
+      } catch {
+        showSection('welcome');
+      }
+    }
+
+    checkExistingSession();
+  </script>
+</body>
+</html>
+```
