@@ -39,7 +39,7 @@ from basic_llm import (
 import numpy as np
 
 DEFAULT_SAVE = "model.json"
-DEFAULT_DIMS = dict(dim=64, num_heads=4, num_layers=2, block_size=64, lr=1e-2)
+DEFAULT_DIMS = dict(dim=16, num_heads=4, num_layers=1, block_size=32, lr=1e-2)
 
 
 def build_model(vocab_size: int) -> BasicLLM:
@@ -140,7 +140,17 @@ def cmd_train(args, stoi, itos, data):
 def cmd_gen(args, stoi, itos, data):
     model = build_model(len(stoi))
     if os.path.exists(args.save):
-        model.load(args.save)
+        try:
+            model.load(args.save)
+            # Validate dimensions match
+            if (model.dim != DEFAULT_DIMS["dim"]
+                    or model.num_layers != DEFAULT_DIMS["num_layers"]
+                    or model.block_size != DEFAULT_DIMS["block_size"]):
+                print(f"[GEN] saved model dims don't match current config; using untrained weights.")
+                model = build_model(len(stoi))
+        except Exception as e:
+            print(f"[GEN] could not load saved model ({e}); using untrained weights.")
+            model = build_model(len(stoi))
     else:
         print(f"[GEN] no saved model at {args.save}; using untrained weights.")
 
