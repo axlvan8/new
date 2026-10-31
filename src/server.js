@@ -1,4 +1,6 @@
 
+import { files } from './files.js';
+import { messages } from './messages.js';
 import { readFile } from 'node:fs/promises';
 import { serveStatic } from '@hono/node-server/serve-static';
 import 'dotenv/config';
@@ -15,6 +17,8 @@ app.get('/', async (c) => {
 });
 
 app.route('/api/auth', auth);
+app.route('/api/files', files);
+app.route('/api/messages', messages);
 
 //app.get('/', (c) => {
 //  return c.json({

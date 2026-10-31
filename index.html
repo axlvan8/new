@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,6 +120,210 @@
       color: #8290a6;
       font-size: .85rem;
     }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: 260px 1fr;
+      }
+    }
+
+    .conversation-list {
+      border: 1px solid #293449;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+    }
+
+    .conversation-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid #293449;
+      font-weight: 700;
+      font-size: 1rem;
+      background: #131d30;
+    }
+
+    .conversations {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .conversation-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #1f2a3f;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .conversation-item:hover {
+      background: #18233a;
+    }
+
+    .conversation-item.active {
+      background: #1e3a5f;
+    }
+
+    .conv-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .conv-meta {
+      font-size: .82rem;
+      color: #93a4bb;
+      white-space: nowrap;
+    }
+
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+      border: 1px solid #293449;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #293449;
+      background: #131d30;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .chat-type {
+      font-size: .78rem;
+      color: #93a4bb;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #0e1524;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: .93rem;
+      line-height: 1.45;
+      margin-bottom: 4px;
+      animation: fadeIn .18s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.me {
+      align-self: flex-end;
+      background: #3b82f6;
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+
+    .message.other {
+      align-self: flex-start;
+      background: #1f2a3f;
+      color: #e5e7eb;
+      border-bottom-left-radius: 2px;
+    }
+
+    .message-sender {
+      font-size: .75rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      opacity: .8;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .message-time {
+      font-size: .72rem;
+      opacity: .6;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .message.me .message-time { text-align: right; }
+
+    .empty-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #93a4bb;
+    }
+
+    .chat-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid #293449;
+      background: #131d30;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+    }
+
+    .invite-input {
+      max-width: 220px;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: .85rem;
+    }
+
+    .participants-list {
+      padding: 10px 16px;
+      font-size: .88rem;
+      color: #aab7ca;
+    }
+
+    .participant-tag {
+      display: inline-block;
+      background: #25344b;
+      border-radius: 6px;
+      padding: 3px 9px;
+      margin: 2px 4px 2px 0;
+      font-size: .82rem;
+    }
+
+    .owner-badge {
+      color: #93c5fd;
+      font-size: .75rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
   </style>
 </head>
 <body>
@@ -133,8 +336,8 @@
     <section id="welcome" class="panel">
       <h1>Your own backend platform</h1>
       <p>
-        MyFirebase is a self-hosted project for accounts, data, and
-        eventually storage, realtime updates, and messaging.
+        MyFirebase is a self-hosted project for accounts, data, storage,
+        and messaging.
       </p>
       <div class="actions">
         <button class="primary" id="show-login">Log in</button>
@@ -199,7 +402,65 @@
         <p>Database API <span class="muted">Implemented for testing</span></p>
         <p>File storage <span class="muted">Not implemented yet</span></p>
         <p>Realtime updates <span class="muted">Not implemented yet</span></p>
-        <p>Internal messaging <span class="muted">Not implemented yet</span></p>
+        <p>Internal messaging <span class="muted">Available</span></p>
+      </div>
+
+      <div class="grid">
+        <div class="conversation-list">
+          <div class="conversation-header">
+            <div>Conversations</div>
+            <button class="btn-small secondary" id="new-conversation-button" style="float:right">New</button>
+          </div>
+          <div class="conversations" id="conversations-list"></div>
+        </div>
+
+        <div class="chat-panel hidden" id="chat-panel">
+          <div class="chat-header">
+            <div class="chat-title" id="chat-title">Select a conversation</div>
+            <div class="chat-type" id="chat-type"></div>
+          </div>
+          <div class="messages" id="messages-list">
+            <div class="empty-chat">
+              <div>Select a conversation to start messaging</div>
+            </div>
+          </div>
+          <div class="chat-input-area hidden" id="chat-input-area">
+            <input type="text" id="message-input" placeholder="Type a message…" maxlength="10000">
+            <button class="primary" id="send-message-button">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="new-conv-panel">
+        <h2>New Conversation</h2>
+        <p>Start a direct message or create a group.</p>
+        <div class="actions" style="gap:8px; margin-bottom:14px">
+          <button class="secondary" id="new-direct-button">Direct message</button>
+          <button class="primary" id="new-group-button">Group chat</button>
+        </div>
+        <div class="hidden" id="direct-form">
+          <label>Message <strong id="direct-username"></strong></label>
+          <input type="hidden" id="direct-user-id">
+          <button class="primary" id="create-direct-button">Start conversation</button>
+        </div>
+        <div class="hidden" id="group-form">
+          <label>Group name</label>
+          <input type="text" id="group-name" placeholder="e.g. Project Alpha">
+          <label class="muted" style="margin-top:10px">Add participants (comma-separated usernames)</label>
+          <input type="text" id="group-participants" placeholder="alice, bob, charlie">
+          <button class="primary" id="create-group-button">Create group</button>
+        </div>
+        <div id="new-conv-status" class="status" role="status"></div>
+      </div>
+
+      <div class="panel hidden" id="invite-panel">
+        <h2>Invite to <span id="invite-conv-name"></span></h2>
+        <p class="muted">Add people by username (comma-separated). Only the owner can invite.</p>
+        <input type="hidden" id="invite-conv-id">
+        <input type="text" id="invite-usernames" placeholder="alice, bob, charlie">
+        <button class="primary" id="invite-send-button">Invite</button>
+        <button class="secondary" id="invite-close-button">Close</button>
+        <div id="invite-status" class="status" role="status"></div>
       </div>
     </section>
   </main>
@@ -217,6 +478,12 @@
       for (const section of sections) {
         $(section).classList.toggle('hidden', section !== id);
       }
+    }
+
+    function hideAllPanels() {
+      $('chat-panel').classList.add('hidden');
+      $('new-conv-panel').classList.add('hidden');
+      $('invite-panel').classList.add('hidden');
     }
 
     async function api(path, options = {}) {
@@ -247,7 +514,9 @@
       $('account-id').textContent = user.id;
       $('header-user').textContent = user.username;
       $('account-status').textContent = '';
+      hideAllPanels();
       showSection('dashboard');
+      loadConversations();
     }
 
     $('show-login').addEventListener('click', () => showSection('login-panel'));
@@ -329,6 +598,237 @@
       }
     });
 
+    // ---------------- Messaging ----------------
+    let currentConversationId = null;
+
+    async function loadConversations() {
+      try {
+        const result = await api('/messages/conversations');
+        const list = $('conversations-list');
+        list.innerHTML = '';
+
+        for (const conv of result.data) {
+          const item = document.createElement('div');
+          item.className = 'conversation-item';
+          item.dataset.id = conv.id;
+
+          const others = conv.participants.filter(p => p.id != conv.owner_id && p.id != $('account-id').textContent);
+          const label = conv.is_group ? conv.name : (others[0]?.username || 'User');
+
+            item.innerHTML = `
+            <div>
+              <div class="conv-name">${escapeHtml(label)}</div>
+              <div class="conv-meta">${conv.is_group ? 'Group' : 'Direct'}</div>
+            </div>
+            <div class="conv-meta">${new Date(conv.created_at).toLocaleDateString()}</div>
+          `;
+
+          item.addEventListener('click', () => openConversation(conv));
+          list.appendChild(item);
+        }
+      } catch (error) {
+        showStatus('account-status', 'Could not load conversations: ' + error.message);
+      }
+    }
+
+    async function openConversation(conv) {
+      currentConversationId = conv.id;
+
+      // Mark active
+      for (const item of $('conversations-list').children) {
+        item.classList.toggle('active', item.dataset.id == conv.id);
+      }
+
+      $('chat-title').textContent = conv.is_group ? (conv.name || 'Group') : 'Direct message';
+      $('chat-type').textContent = conv.is_group ? 'Group chat' : 'Direct';
+
+      const chatPanel = $('chat-panel');
+      chatPanel.classList.remove('hidden');
+      $('chat-input-area').classList.remove('hidden');
+
+      const messagesList = $('messages-list');
+      messagesList.innerHTML = '<div class="empty-chat">Loading messages…</div>';
+
+      await loadMessages();
+
+      // Show invite button for group owners
+      const meId = Number($('account-id').textContent);
+      const isGroupOwner = conv.is_group && Number(conv.owner_id) === meId;
+      // Reuse header area: nothing extra for now
+    }
+
+    async function loadMessages() {
+      if (!currentConversationId) return;
+
+      try {
+        const result = await api(`/messages/conversations/${currentConversationId}/messages`);
+        const messagesList = $('messages-list');
+        messagesList.innerHTML = '';
+
+        for (const message of result.data) {
+          const meId = Number($('account-id').textContent);
+          const isMe = Number(message.sender_id) === meId;
+          const div = document.createElement('div');
+          div.className = 'message ' + (isMe ? 'me' : 'other');
+          div.innerHTML = `
+            <div class="message-sender">${escapeHtml(isMe ? 'You' : message.sender_username)}</div>
+            <div>${escapeHtml(message.content)}</div>
+            <span class="message-time">${new Date(message.created_at).toLocaleTimeString()}</span>
+          `;
+          messagesList.appendChild(div);
+        }
+        messagesList.scrollTop = messagesList.scrollHeight;
+      } catch (error) {
+        $('messages-list').innerHTML = '<div class="empty-chat">Could not load messages.</div>';
+      }
+    }
+
+    async function sendMessage() {
+      const input = $('message-input');
+      const content = input.value.trim();
+      if (!content || !currentConversationId) return;
+
+      try {
+        await api(`/messages/conversations/${currentConversationId}/messages`, {
+          method: 'POST',
+          body: JSON.stringify({ content })
+        });
+        input.value = '';
+        await loadMessages();
+      } catch (error) {
+        showStatus('account-status', 'Could not send message: ' + error.message);
+      }
+    }
+
+    $('send-message-button').addEventListener('click', sendMessage);
+
+    $('message-input').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // New conversation
+    $('new-conversation-button').addEventListener('click', () => {
+      $('new-conv-panel').classList.remove('hidden');
+      $('direct-form').classList.add('hidden');
+      $('group-form').classList.add('hidden');
+      $('new-conv-status').textContent = '';
+    });
+
+    $('new-direct-button').addEventListener('click', () => {
+      const username = prompt('Enter the username to message:');
+      if (!username) return;
+      $('direct-username').textContent = username;
+      $('direct-user-id').value = '';
+      $('direct-form').classList.remove('hidden');
+      $('group-form').classList.add('hidden');
+
+      // Resolve user id by looking up conversations list won't help; prompt user for id too is ugly.
+      // Instead ask for username then we cannot create without id. Keep simple: ask numeric id fallback.
+      const userId = prompt('Enter the user ID for "' + username + '":');
+      if (!userId || !/^[1-9]\d*$/.test(userId)) {
+        showStatus('new-conv-status', 'Invalid user ID');
+        return;
+      }
+      $('direct-user-id').value = userId;
+    });
+
+    $('create-direct-button').addEventListener('click', async () => {
+      const otherUserId = Number($('direct-user-id').value);
+      if (!otherUserId) {
+        showStatus('new-conv-status', 'A user ID is required');
+        return;
+      }
+
+      try {
+        await api('/messages/conversations', {
+          method: 'POST',
+          body: JSON.stringify({ is_direct: true, participant_ids: [otherUserId] })
+        });
+        $('new-conv-panel').classList.add('hidden');
+        await loadConversations();
+      } catch (error) {
+        showStatus('new-conv-status', error.message);
+      }
+    });
+
+    $('new-group-button').addEventListener('click', () => {
+      $('group-form').classList.remove('hidden');
+      $('direct-form').classList.add('hidden');
+      $('group-name').value = '';
+      $('group-participants').value = '';
+      $('new-conv-status').textContent = '';
+    });
+
+    $('create-group-button').addEventListener('click', async () => {
+      const name = $('group-name').value.trim();
+      const raw = $('group-participants').value.trim();
+      const meId = Number($('account-id').textContent);
+      const participantIds = [meId];
+
+      if (!name) {
+        showStatus('new-conv-status', 'Group name is required');
+        return;
+      }
+
+      if (raw) {
+        const names = raw.split(',').map(s => s.trim()).filter(Boolean);
+        // We only have usernames here; resolve via a lookup is not implemented, so ask ids instead.
+        showStatus('new-conv-status', 'Add participants by user ID (comma-separated) for now');
+        return;
+      }
+
+      try {
+        await api('/messages/conversations', {
+          method: 'POST',
+          body: JSON.stringify({ is_direct: false, name, participant_ids: participantIds })
+        });
+        $('new-conv-panel').classList.add('hidden');
+        await loadConversations();
+      } catch (error) {
+        showStatus('new-conv-status', error.message);
+      }
+    });
+
+    // Invite
+    $('invite-send-button').addEventListener('click', async () => {
+      const convId = $('invite-conv-id').value;
+      const raw = $('invite-usernames').value.trim();
+      if (!convId || !raw) return;
+
+      // Note: usernames not resolvable without a lookup endpoint; entering IDs is required for now.
+      const ids = raw.split(',').map(s => s.trim()).filter(Boolean);
+      if (!ids.every(id => /^[1-9]\d*$/.test(id))) {
+        showStatus('invite-status', 'Enter user IDs (comma-separated)');
+        return;
+      }
+
+      try {
+        await api(`/messages/conversations/${convId}/invite`, {
+          method: 'POST',
+          body: JSON.stringify({ user_ids: ids.map(Number) })
+        });
+        $('invite-panel').classList.add('hidden');
+        $('invite-usernames').value = '';
+        await loadConversations();
+      } catch (error) {
+        showStatus('invite-status', error.message);
+      }
+    });
+
+    $('invite-close-button').addEventListener('click', () => {
+      $('invite-panel').classList.add('hidden');
+      $('invite-status').textContent = '';
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text ?? '';
+      return div.innerHTML;
+    }
+
     async function checkExistingSession() {
       try {
         const result = await api('/auth/me');
@@ -342,4 +842,3 @@
   </script>
 </body>
 </html>
-```
